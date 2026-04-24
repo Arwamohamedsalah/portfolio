@@ -22,7 +22,7 @@ const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'arwamohamedsalah05@gmail.com';
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'Arwa2030';
 const ALLOWED_ORIGINS = process.env.CORS_ORIGIN
   ? process.env.CORS_ORIGIN.split(',').map((origin) => origin.trim()).filter(Boolean)
-  : ['http://localhost:5173', 'http://localhost:5174', 'http://localhost:3000'];
+  : ['*'];
 
 console.log('CORS allowed origins:', ALLOWED_ORIGINS);
 
