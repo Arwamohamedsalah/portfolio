@@ -71,9 +71,9 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// Frontend static build (production)
+// Frontend static build (production or deployed build)
 const clientBuildPath = path.join(__dirname, '../dist');
-if (process.env.NODE_ENV === 'production' && fs.existsSync(clientBuildPath)) {
+if (fs.existsSync(clientBuildPath)) {
   app.use(express.static(clientBuildPath));
 
   app.get('*', (req, res, next) => {

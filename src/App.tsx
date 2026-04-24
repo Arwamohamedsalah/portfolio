@@ -2,7 +2,6 @@ import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { useAuth } from './contexts/AuthContext';
-import Portfolio from './pages/Portfolio';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 
@@ -27,7 +26,7 @@ function App() {
   return (
     <ThemeProvider>
       <Routes>
-        <Route path="/" element={<Portfolio />} />
+        <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="/login" element={<Login />} />
         <Route
           path="/dashboard"
