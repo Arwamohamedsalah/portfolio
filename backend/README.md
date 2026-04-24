@@ -123,16 +123,30 @@ Create a `.env` file based on `.env.example`:
 
 ```env
 NODE_ENV=development
-PORT=5000
+PORT=9999
+CORS_ORIGIN=http://localhost:5173,http://localhost:5174,http://localhost:3000
 MONGODB_URI=mongodb://localhost:27017/portfolio-contacts
 ```
 
 ## Production Deployment
 
-1. Set `NODE_ENV=production`
-2. Configure production MongoDB URI
-3. Set appropriate CORS origins
-4. Consider adding authentication for admin endpoints
+1. Build the frontend from the repository root:
+   ```bash
+   npm install
+   npm run build
+   ```
+2. In the `backend` directory, install backend dependencies:
+   ```bash
+   cd backend
+   npm install
+   ```
+3. Set `NODE_ENV=production` and a production `MONGODB_URI`.
+4. If the frontend is served from the same host, use `VITE_API_URL=/api` in the frontend `.env`.
+5. Set `CORS_ORIGIN` to your deployed app origin(s), or leave it with the localhost defaults for local testing.
+6. Start the backend server:
+   ```bash
+   npm start
+   ```
 
 ## Security Features
 

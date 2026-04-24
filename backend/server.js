@@ -2,7 +2,13 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const dotenv = require('dotenv');
+const fs = require('fs');
 const contactRoutes = require('./routes/contact');
+const authRoutes = require('./routes/auth');
+const projectRoutes = require('./routes/projects');
+const sectionRoutes = require('./routes/sections');
+const uploadRoutes = require('./routes/upload');
+const path = require('path');
 // const emailService = require('./services/emailService'); // Temporarily disabled due to module conflict
 
 // Load environment variables
@@ -10,17 +16,25 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 9999;
+const ALLOWED_ORIGINS = process.env.CORS_ORIGIN
+  ? process.env.CORS_ORIGIN.split(',').map((origin) => origin.trim())
+  : ['http://localhost:5173', 'http://localhost:5174', 'http://localhost:3000'];
 
 // Middleware
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://localhost:5174', 'http://localhost:3000'],
-  credentials: true
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true);
+    if (ALLOWED_ORIGINS.includes(origin)) return callback(null, true);
+    return callback(new Error(`CORS policy: origin ${origin} not allowed`));
+  },
+  credentials: true,
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // MongoDB Connection
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/portfolio-contacts', {
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://arwamohamedsalah05_db_user:Arwa%4056789@cluster0.dzf1tgl.mongodb.net/portfolio?retryWrites=true&w=majority';
+mongoose.connect(MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
@@ -31,8 +45,15 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/portfolio
   console.error('MongoDB connection error:', error);
 });
 
+// Serve uploaded files
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 // Routes
 app.use('/api/contact', contactRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/projects', projectRoutes);
+app.use('/api/sections', sectionRoutes);
+app.use('/api/upload', uploadRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
@@ -42,6 +63,19 @@ app.get('/api/health', (req, res) => {
     status: 'healthy'
   });
 });
+
+// Frontend static build (production)
+const clientBuildPath = path.join(__dirname, '../dist');
+if (process.env.NODE_ENV === 'production' && fs.existsSync(clientBuildPath)) {
+  app.use(express.static(clientBuildPath));
+
+  app.get('*', (req, res, next) => {
+    if (req.path.startsWith('/api') || req.path.startsWith('/uploads')) {
+      return next();
+    }
+    res.sendFile(path.join(clientBuildPath, 'index.html'));
+  });
+}
 
 // Error handling middleware
 app.use((error, req, res, next) => {

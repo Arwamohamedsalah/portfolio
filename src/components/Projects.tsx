@@ -1,67 +1,43 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { ExternalLink, Github, Smartphone, Globe } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
+import api from '../services/api';
+
+interface Project {
+  _id: string;
+  title: string;
+  description: string;
+  image: string;
+  technologies: string[];
+  type: 'web' | 'mobile';
+  github: string;
+  live: string;
+  featured: boolean;
+  order: number;
+}
 
 const Projects = () => {
   const sectionRef = useRef<HTMLElement>(null);
   const { isDark } = useTheme();
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const projects = [
-    {
-      title: 'E-Commerce React App',
-      description: 'A modern, fully responsive e-commerce platform built with React.js featuring component-based architecture, React Hooks for state management, React Router for navigation, and seamless integration with Node.js backend and payment systems.',
-      image: 'https://images.pexels.com/photos/230544/pexels-photo-230544.jpeg?auto=compress&cs=tinysrgb&w=600',
-      technologies: ['React.js', 'React Hooks', 'React Router', 'Node.js', 'MongoDB', 'Stripe'],
-      type: 'web',
-      github: '#',
-      live: '#'
-    },
-    {
-      title: 'Task Management Mobile App',
-      description: 'Cross-platform mobile application for task management with real-time synchronization and offline support.',
-      image: 'https://images.pexels.com/photos/3184418/pexels-photo-3184418.jpeg?auto=compress&cs=tinysrgb&w=600',
-      technologies: ['React Native', 'Firebase', 'Redux'],
-      type: 'mobile',
-      github: '#',
-      live: '#'
-    },
-    {
-      title: 'Corporate Website',
-      description: 'Modern responsive website for a corporate client with CMS integration and SEO optimization.',
-      image: 'https://images.pexels.com/photos/196644/pexels-photo-196644.jpeg?auto=compress&cs=tinysrgb&w=600',
-      technologies: ['Next.js', 'WordPress', 'Material-UI'],
-      type: 'web',
-      github: '#',
-      live: '#'
-    },
-    {
-      title: 'Flutter Finance App',
-      description: 'Personal finance tracking application with beautiful UI and comprehensive analytics dashboard.',
-      image: 'https://images.pexels.com/photos/159888/pexels-photo-159888.jpeg?auto=compress&cs=tinysrgb&w=600',
-      technologies: ['Flutter', 'Dart', 'SQLite'],
-      type: 'mobile',
-      github: '#',
-      live: '#'
-    },
-    {
-      title: 'Real Estate Platform',
-      description: 'Full-stack real estate platform with property listings, search functionality, and user dashboards.',
-      image: 'https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&cs=tinysrgb&w=600',
-      technologies: ['React.js', 'PHP', 'MySQL', 'Google Maps API'],
-      type: 'web',
-      github: '#',
-      live: '#'
-    },
-    {
-      title: 'Social Media Dashboard',
-      description: 'Analytics dashboard for social media management with data visualization and reporting features.',
-      image: 'https://images.pexels.com/photos/265087/pexels-photo-265087.jpeg?auto=compress&cs=tinysrgb&w=600',
-      technologies: ['React.js', 'Chart.js', 'Node.js', 'PostgreSQL'],
-      type: 'web',
-      github: '#',
-      live: '#'
+  useEffect(() => {
+    fetchProjects();
+  }, []);
+
+  const fetchProjects = async () => {
+    try {
+      const response = await api.get('/projects');
+      setProjects(response.data.data);
+    } catch (error) {
+      console.error('Error fetching projects:', error);
+      // Fallback to empty array if API fails
+      setProjects([]);
+    } finally {
+      setLoading(false);
     }
-  ];
+  };
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -104,10 +80,20 @@ const Projects = () => {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {projects.map((project, index) => (
-            <div
-              key={index}
+        {loading ? (
+          <div className="text-center py-12">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto"></div>
+            <p className={`mt-4 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Loading projects...</p>
+          </div>
+        ) : projects.length === 0 ? (
+          <div className="text-center py-12">
+            <p className={`${isDark ? 'text-gray-400' : 'text-gray-600'}`}>No projects available yet.</p>
+          </div>
+        ) : (
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {projects.map((project) => (
+              <div
+                key={project._id}
               className={`animate-on-scroll group backdrop-blur-sm rounded-xl overflow-hidden border transition-all duration-300 transform hover:scale-105 hover:shadow-2xl ${
                 isDark 
                   ? 'bg-slate-800/30 border-slate-700/50 hover:border-blue-400/50'
@@ -203,7 +189,8 @@ const Projects = () => {
               </div>
             </div>
           ))}
-        </div>
+          </div>
+        )}
 
         {/* View More Button */}
         <div className="text-center mt-12 animate-on-scroll">

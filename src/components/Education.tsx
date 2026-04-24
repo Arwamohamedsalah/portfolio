@@ -1,22 +1,56 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { GraduationCap, Code, Smartphone, Server, Database, Globe, Palette, Book, Award, Calendar, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { GraduationCap, Code, Smartphone, Book, Award, Calendar, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
+import api from '../services/api';
+
+interface EducationTrack {
+  title: string;
+  duration: string;
+  period: string;
+  description: string;
+  skills: Array<{ name: string; category: string }>;
+}
+
+interface EducationData {
+  _id: string;
+  institution: string;
+  degree: string;
+  duration: string;
+  description: string;
+  tracks: EducationTrack[];
+}
 
 const Education = () => {
   const sectionRef = useRef<HTMLElement>(null);
-  const [isVisible, setIsVisible] = useState(false);
   const [currentSkillPage, setCurrentSkillPage] = useState<{[key: number]: number}>({});
   const { isDark } = useTheme();
+  const [education, setEducation] = useState<EducationData[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const SKILLS_PER_PAGE = 8;
 
-  const educationTracks = [
+  useEffect(() => {
+    fetchEducation();
+  }, []);
+
+  const fetchEducation = async () => {
+    try {
+      const response = await api.get('/sections/education');
+      setEducation(response.data.data || []);
+    } catch (error) {
+      console.error('Error fetching education:', error);
+      setEducation([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Default tracks if no data from API
+  const defaultEducationTracks: EducationTrack[] = [
     {
       title: 'Software Fundamentals Track',
       duration: '4 Months Scholarship',
       period: 'First Track',
-      icon: Code,
-      color: 'blue',
       description: 'Comprehensive foundation in software development principles and core programming concepts.',
       skills: [
         { name: 'Programming Fundamentals', category: 'Core' },
@@ -38,8 +72,6 @@ const Education = () => {
       title: 'Frontend & Cross-Platform Mobile Application Track',
       duration: '4 Months Scholarship',
       period: 'Advanced Track',
-      icon: Smartphone,
-      color: 'purple',
       description: 'Specialized training in modern frontend frameworks, mobile application development, and cross-platform technologies.',
       skills: [
         { name: 'HTML5', category: 'Web' },
@@ -99,10 +131,9 @@ const Education = () => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setIsVisible(true);
-            entry.target.classList.add('animate-fadeInUp');
-          }
+      if (entry.isIntersecting) {
+        entry.target.classList.add('animate-fadeInUp');
+      }
         });
       },
       { threshold: 0.2 }
@@ -135,7 +166,7 @@ const Education = () => {
   const handleSkillPageChange = (trackIndex: number, direction: 'next' | 'prev') => {
     setCurrentSkillPage(prev => {
       const currentPage = prev[trackIndex] || 0;
-      const maxPage = Math.ceil(educationTracks[trackIndex].skills.length / SKILLS_PER_PAGE) - 1;
+      const maxPage = Math.ceil((educationTracks[trackIndex]?.skills?.length || 0) / SKILLS_PER_PAGE) - 1;
       
       if (direction === 'next' && currentPage < maxPage) {
         return { ...prev, [trackIndex]: currentPage + 1 };
@@ -146,15 +177,26 @@ const Education = () => {
     });
   };
 
+  // Get education tracks from API or use default
+  const getEducationTracks = (): EducationTrack[] => {
+    if (education.length > 0 && education[0].tracks) {
+      return education[0].tracks;
+    }
+    return defaultEducationTracks;
+  };
+
+  const educationTracks = getEducationTracks();
+  const currentEducation = education.length > 0 ? education[0] : null;
+
   const getCurrentSkills = (trackIndex: number) => {
     const currentPage = currentSkillPage[trackIndex] || 0;
     const startIndex = currentPage * SKILLS_PER_PAGE;
     const endIndex = startIndex + SKILLS_PER_PAGE;
-    return educationTracks[trackIndex].skills.slice(startIndex, endIndex);
+    return educationTracks[trackIndex]?.skills?.slice(startIndex, endIndex) || [];
   };
 
   const getTotalPages = (trackIndex: number) => {
-    return Math.ceil(educationTracks[trackIndex].skills.length / SKILLS_PER_PAGE);
+    return Math.ceil((educationTracks[trackIndex]?.skills?.length || 0) / SKILLS_PER_PAGE);
   };
 
   return (
@@ -215,58 +257,70 @@ const Education = () => {
         </div>
 
         {/* ITI Institution Card */}
-        <div className="mb-12 animate-on-scroll">
-          <div className={`relative p-8 rounded-2xl backdrop-blur-sm border transition-all duration-500 transform hover:scale-[1.02] ${
-            isDark 
-              ? 'bg-gradient-to-r from-slate-800/60 to-slate-700/60 border-slate-600/50 hover:border-blue-400/50'
-              : 'bg-gradient-to-r from-white/80 to-gray-50/80 border-gray-200/50 hover:border-indigo-400/50'
-          }`}>
-            <div className="flex items-center gap-6 mb-6">
-              <div className={`p-4 rounded-xl ${
-                isDark ? 'bg-blue-500/20' : 'bg-indigo-100'
-              }`}>
-                <Award className={`w-12 h-12 ${
-                  isDark ? 'text-blue-400' : 'text-indigo-600'
-                }`} />
-              </div>
-              <div>
-                <h3 className={`text-3xl font-bold ${
-                  isDark ? 'text-white' : 'text-gray-900'
+        {currentEducation && (
+          <div className="mb-12 animate-on-scroll">
+            <div className={`relative p-8 rounded-2xl backdrop-blur-sm border transition-all duration-500 transform hover:scale-[1.02] ${
+              isDark 
+                ? 'bg-gradient-to-r from-slate-800/60 to-slate-700/60 border-slate-600/50 hover:border-blue-400/50'
+                : 'bg-gradient-to-r from-white/80 to-gray-50/80 border-gray-200/50 hover:border-indigo-400/50'
+            }`}>
+              <div className="flex items-center gap-6 mb-6">
+                <div className={`p-4 rounded-xl ${
+                  isDark ? 'bg-blue-500/20' : 'bg-indigo-100'
                 }`}>
-                  Information Technology Institute
-                </h3>
-                <p className={`text-xl ${
-                  isDark ? 'text-blue-400' : 'text-indigo-600'
-                }`}>
-                  Frontend & Cross-Platform Development Graduate
-                </p>
-                <div className="flex items-center gap-2 mt-2">
-                  <Calendar className={`w-5 h-5 ${
-                    isDark ? 'text-gray-400' : 'text-gray-500'
+                  <Award className={`w-12 h-12 ${
+                    isDark ? 'text-blue-400' : 'text-indigo-600'
                   }`} />
-                  <span className={`${
-                    isDark ? 'text-gray-400' : 'text-gray-600'
+                </div>
+                <div>
+                  <h3 className={`text-3xl font-bold ${
+                    isDark ? 'text-white' : 'text-gray-900'
                   }`}>
-                    8 Months Intensive Training Program
-                  </span>
+                    {currentEducation.institution}
+                  </h3>
+                  <p className={`text-xl ${
+                    isDark ? 'text-blue-400' : 'text-indigo-600'
+                  }`}>
+                    {currentEducation.degree}
+                  </p>
+                  <div className="flex items-center gap-2 mt-2">
+                    <Calendar className={`w-5 h-5 ${
+                      isDark ? 'text-gray-400' : 'text-gray-500'
+                    }`} />
+                    <span className={`${
+                      isDark ? 'text-gray-400' : 'text-gray-600'
+                    }`}>
+                      {currentEducation.duration}
+                    </span>
+                  </div>
                 </div>
               </div>
+              {currentEducation.description && (
+                <p className={`text-lg leading-relaxed ${
+                  isDark ? 'text-gray-300' : 'text-gray-700'
+                }`}>
+                  {currentEducation.description}
+                </p>
+              )}
             </div>
-            <p className={`text-lg leading-relaxed ${
-              isDark ? 'text-gray-300' : 'text-gray-700'
-            }`}>
-              Completed an intensive 8-month dual-track program at ITI, one of Egypt's leading 
-              technology institutes. The program provided comprehensive training in software 
-              fundamentals and advanced frontend & cross-platform development technologies.
-            </p>
           </div>
-        </div>
+        )}
 
         {/* Education Tracks */}
-        <div className="grid lg:grid-cols-2 gap-8">
-          {educationTracks.map((track, index) => {
-            const colorClasses = getColorClasses(track.color);
-            const Icon = track.icon;
+        {loading ? (
+          <div className="text-center py-12">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto"></div>
+            <p className={`mt-4 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Loading education...</p>
+          </div>
+        ) : educationTracks.length === 0 ? (
+          <div className="text-center py-12">
+            <p className={`${isDark ? 'text-gray-400' : 'text-gray-600'}`}>No education data available yet.</p>
+          </div>
+        ) : (
+          <div className="grid lg:grid-cols-2 gap-8">
+            {educationTracks.map((track, index) => {
+              const colorClasses = getColorClasses(index === 0 ? 'blue' : 'purple');
+              const Icon = index === 0 ? Code : Smartphone;
 
             return (
               <div
@@ -413,7 +467,8 @@ const Education = () => {
               </div>
             );
           })}
-        </div>
+          </div>
+        )}
 
         {/* Achievement Summary */}
         <div className="mt-16 animate-on-scroll">

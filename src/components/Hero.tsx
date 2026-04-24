@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { ChevronDown, Download, Github, Linkedin, Mail } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
+import arwaPic from '../arwapic.jpeg';
+import api from '../services/api';
 
 const Hero = () => {
   const [displayText, setDisplayText] = useState('');
@@ -8,8 +10,33 @@ const Hero = () => {
   const [loopNum, setLoopNum] = useState(0);
   const [typingSpeed, setTypingSpeed] = useState(150);
   const { isDark } = useTheme();
+  const [resumeUrl, setResumeUrl] = useState<string | null>(null);
 
-  const titles = ['Fullstack Developer', 'React Developer', 'Mobile App Developer', 'Web Designer'];
+  useEffect(() => {
+    fetchResume();
+  }, []);
+
+  const fetchResume = async () => {
+    try {
+      const response = await api.get('/upload/resume');
+      if (response.data.success) {
+        setResumeUrl(`http://localhost:9999${response.data.data.url}`);
+      }
+    } catch (error) {
+      // Resume not found, that's okay
+      setResumeUrl(null);
+    }
+  };
+
+  const handleDownloadResume = () => {
+    if (resumeUrl) {
+      window.open(resumeUrl, '_blank');
+    } else {
+      alert('Resume not available yet. Please check back later.');
+    }
+  };
+
+  const titles = ['MERN stack developer', 'UI/UX Developer', 'Fullstack Developer', 'React Developer'];
 
   useEffect(() => {
     const handleTyping = () => {
@@ -226,16 +253,34 @@ const Hero = () => {
             </span>
           </div>
 
-          <p className={`text-lg md:text-xl mb-12 max-w-2xl mx-auto leading-relaxed animate-fadeInUp delay-300 transition-all duration-500 ${
+          <p className={`text-lg md:text-xl mb-8 max-w-2xl mx-auto leading-relaxed animate-fadeInUp delay-300 transition-all duration-500 ${
             isDark ? 'text-gray-400' : 'text-gray-600'
           }`}>
             Passionate about creating innovative web and mobile applications with modern technologies. 
             Building digital experiences that make a difference across the universe of code.
           </p>
+          
+          {/* Role Badges */}
+          <div className="flex flex-wrap justify-center gap-4 mb-12 animate-fadeInUp delay-400">
+            <div className={`px-6 py-3 rounded-full backdrop-blur-sm border transition-all duration-300 transform hover:scale-105 ${
+              isDark
+                ? 'bg-blue-600/20 border-blue-400/50 text-blue-300 hover:bg-blue-600/30'
+                : 'bg-indigo-100/80 border-indigo-300/50 text-indigo-700 hover:bg-indigo-200/80'
+            }`}>
+              <span className="font-semibold">MERN stack developer</span>
+            </div>
+            <div className={`px-6 py-3 rounded-full backdrop-blur-sm border transition-all duration-300 transform hover:scale-105 ${
+              isDark
+                ? 'bg-purple-600/20 border-purple-400/50 text-purple-300 hover:bg-purple-600/30'
+                : 'bg-purple-100/80 border-purple-300/50 text-purple-700 hover:bg-purple-200/80'
+            }`}>
+              <span className="font-semibold">UI/UX Developer</span>
+            </div>
+          </div>
 
           {/* Enhanced Profile Image */}
           <div className="mb-12 relative group animate-fadeInUp delay-500">
-            <div className="w-64 h-64 mx-auto rounded-full overflow-hidden relative">
+            <div className="w-72 h-72 md:w-80 md:h-80 mx-auto rounded-full overflow-hidden relative">
               {/* Multiple Orbital Rings */}
               <div className={`absolute inset-0 rounded-full border-2 animate-spin-slow ${
                 isDark ? 'border-blue-400/30' : 'border-indigo-500/40'
@@ -250,18 +295,19 @@ const Hero = () => {
               {/* Image Container */}
               <div className={`absolute inset-6 rounded-full overflow-hidden border-4 shadow-2xl transform group-hover:scale-105 transition-all duration-500 ${
                 isDark 
-                  ? 'border-gradient-to-r from-blue-400 to-purple-400 shadow-blue-500/25' 
-                  : 'border-gradient-to-r from-indigo-500 to-purple-500 shadow-indigo-500/30'
+                  ? 'border-blue-400/50 shadow-blue-500/30' 
+                  : 'border-indigo-500/60 shadow-indigo-500/40'
               }`}>
                 <img
-                  src="./src/arwapic.jpg"
-                  alt="Arwa MohamedSalah"
+                  src={arwaPic}
+                  alt="Arwa MohamedSalah - MERN stack developer & UI/UX Developer"
                   className="w-full h-full object-cover"
+                  style={{ objectPosition: 'center 20%' }}
                 />
                 <div className={`absolute inset-0 transition-all duration-500 ${
                   isDark 
-                    ? 'bg-gradient-to-t from-slate-900/20 to-transparent'
-                    : 'bg-gradient-to-t from-white/10 to-transparent'
+                    ? 'bg-gradient-to-t from-slate-900/10 to-transparent'
+                    : 'bg-gradient-to-t from-white/5 to-transparent'
                 }`}></div>
               </div>
               
@@ -283,11 +329,14 @@ const Hero = () => {
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-16 animate-fadeInUp delay-700">
-            <button className={`group px-8 py-4 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 hover:shadow-xl flex items-center gap-2 ${
-              isDark
-                ? 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white hover:shadow-blue-500/25'
-                : 'bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white hover:shadow-indigo-500/30'
-            }`}>
+            <button 
+              onClick={handleDownloadResume}
+              className={`group px-8 py-4 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 hover:shadow-xl flex items-center gap-2 ${
+                isDark
+                  ? 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white hover:shadow-blue-500/25'
+                  : 'bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white hover:shadow-indigo-500/30'
+              }`}
+            >
               <Download className="w-5 h-5 group-hover:animate-bounce" />
               Download Resume
             </button>

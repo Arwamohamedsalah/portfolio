@@ -1,10 +1,29 @@
-import React, { useEffect, useRef } from 'react';
-import { Quote, Briefcase, Users, Github } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
+import { Quote, Briefcase, Users, Github, Star, User } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
+import api from '../services/api';
+
+interface Review {
+  _id: string;
+  name: string;
+  role?: string;
+  company?: string;
+  content: string;
+  rating: number;
+  avatar?: string;
+  featured: boolean;
+  order: number;
+}
 
 const Reviews = () => {
   const sectionRef = useRef<HTMLElement>(null);
   const { isDark } = useTheme();
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchReviews();
+  }, []);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -24,48 +43,17 @@ const Reviews = () => {
     return () => observer.disconnect();
   }, []);
 
-  const reviews = [
-    {
-      id: 1,
-      name: "براء عواد",
-      platform: "Khamsat",
-      platformIcon: Briefcase,
-      review: "شكرا لك على العمل الأكثر من رائع وعلى جودة الخدمة وتسليم قبل الوقت المتفق عليه وبإذن الله في تعامل لنا مره ثانيه",
-      project: "مستشار تسويقي"
-    },
-    {
-      id: 2,
-      name: "محمد الحسن",
-      platform: "Khamsat",
-      platformIcon: Briefcase,
-      review: "كانت تجربة العمل مع الأستاذة أروى ممتازة. تعاملها راقٍ، وفهمت المطلوب بدقة، وسلمت الصفحة بشكل احترافي ومتجاوبة مع جميع الأجهزة. عندها صبر كبير وتجاوب سريع، وما قصّرت بأي تعديل طلبته. أنصح بالتعامل معها بشدة، وإن شاء الله مش آخر مرة. شكراً أروى!",
-      project: "مشتري جديد"
-    },
-    {
-      id: 3,
-      name: "kafaaalmetmiza",
-      platform: "Khamsat",
-      platformIcon: Briefcase,
-      review: "والله العظيم ممتازه جداً واداءها احترافي ججداً انصح بالتعامل معها بقوه وما راح يكون اول تعامل",
-      project: "مدخل بيانات"
-    },
-    {
-      id: 4,
-      name: "zaidabuhaq",
-      platform: "Khamsat",
-      platformIcon: Briefcase,
-      review: "عمل ممتاز ورائع",
-      project: "مشتري VIP"
-    },
-    {
-      id: 5,
-      name: "مصطفى م.",
-      platform: "Mostaql",
-      platformIcon: Users,
-      review: "رائع جداً سرعة في التواصل والتعامل والتسليم",
-      project: "دعم، مساعدة وإدخال بيانات"
+  const fetchReviews = async () => {
+    try {
+      const response = await api.get('/sections/reviews');
+      setReviews(response.data.data || []);
+    } catch (error) {
+      console.error('Error fetching reviews:', error);
+      setReviews([]);
+    } finally {
+      setLoading(false);
     }
-  ];
+  };
 
   return (
     <section id="reviews" ref={sectionRef} className="py-20 px-6 relative overflow-hidden">
@@ -111,68 +99,99 @@ const Reviews = () => {
         </div>
 
         {/* Reviews Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {reviews.map((review, index) => {
-            const PlatformIcon = review.platformIcon;
-            return (
-              <div
-                key={review.id}
-                className={`animate-on-scroll backdrop-blur-sm rounded-xl border p-6 transition-all duration-300 transform hover:scale-105 hover:shadow-xl group ${
-                  isDark 
-                    ? 'bg-slate-800/30 border-slate-700/50 hover:border-blue-400/50 hover:shadow-blue-500/10'
-                    : 'bg-white/70 border-gray-200/50 hover:border-indigo-400/50 hover:shadow-indigo-500/10'
-                }`}
-                style={{
-                  animationDelay: `${index * 0.1}s`
-                }}
-              >
-                {/* Quote Icon */}
-                <div className="mb-4">
-                  <Quote className={`w-8 h-8 ${
-                    isDark ? 'text-blue-400' : 'text-indigo-500'
-                  } opacity-50`} />
-                </div>
-
-                {/* Review Text */}
-                <p className={`mb-6 leading-relaxed text-right ${
-                  isDark ? 'text-gray-300' : 'text-gray-700'
-                }`}>
-                  "{review.review}"
-                </p>
-
-                {/* Client Info */}
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="flex-1">
-                    <h4 className={`font-semibold ${
-                      isDark ? 'text-white' : 'text-gray-900'
-                    }`}>{review.name}</h4>
-                    <p className={`text-sm ${
-                      isDark ? 'text-gray-400' : 'text-gray-600'
-                    }`}>{review.project}</p>
+        {loading ? (
+          <div className="text-center py-12">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto"></div>
+            <p className={`mt-4 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Loading reviews...</p>
+          </div>
+        ) : reviews.length === 0 ? (
+          <div className="text-center py-12">
+            <p className={`${isDark ? 'text-gray-400' : 'text-gray-600'}`}>No reviews available yet.</p>
+          </div>
+        ) : (
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {reviews.map((review, index) => {
+              return (
+                <div
+                  key={review._id}
+                  className={`animate-on-scroll backdrop-blur-sm rounded-xl border p-6 transition-all duration-300 transform hover:scale-105 hover:shadow-xl group ${
+                    isDark 
+                      ? 'bg-slate-800/30 border-slate-700/50 hover:border-blue-400/50 hover:shadow-blue-500/10'
+                      : 'bg-white/70 border-gray-200/50 hover:border-indigo-400/50 hover:shadow-indigo-500/10'
+                  }`}
+                  style={{
+                    animationDelay: `${index * 0.1}s`
+                  }}
+                >
+                  {/* Quote Icon */}
+                  <div className="mb-4">
+                    <Quote className={`w-8 h-8 ${
+                      isDark ? 'text-blue-400' : 'text-indigo-500'
+                    } opacity-50`} />
                   </div>
-                </div>
 
-                {/* Platform Badge */}
-                <div className={`flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium ${
-                  review.platform === 'Khamsat'
-                    ? isDark
-                      ? 'bg-orange-500/20 text-orange-400'
-                      : 'bg-orange-100/70 text-orange-600'
-                    : review.platform === 'Mostaql'
-                    ? isDark
-                      ? 'bg-teal-500/20 text-teal-400'
-                      : 'bg-teal-100/70 text-teal-600'
-                    : isDark
-                      ? 'bg-gray-500/20 text-gray-400'
-                      : 'bg-gray-100/70 text-gray-600'
-                }`}>
-                  <PlatformIcon className="w-3 h-3" />
-                  <span>{review.platform}</span>
+                  {/* Review Text */}
+                  <p className={`mb-6 leading-relaxed text-right ${
+                    isDark ? 'text-gray-300' : 'text-gray-700'
+                  }`}>
+                    "{review.content}"
+                  </p>
+
+                  {/* Client Info */}
+                  <div className="flex items-center gap-3 mb-3">
+                    {review.avatar ? (
+                      <img src={review.avatar} alt={review.name} className="w-12 h-12 rounded-full" />
+                    ) : (
+                      <div className={`w-12 h-12 rounded-full flex items-center justify-center ${
+                        isDark ? 'bg-slate-700' : 'bg-gray-200'
+                      }`}>
+                        <User className={`w-6 h-6 ${isDark ? 'text-gray-400' : 'text-gray-600'}`} />
+                      </div>
+                    )}
+                    <div className="flex-1">
+                      <h4 className={`font-semibold ${
+                        isDark ? 'text-white' : 'text-gray-900'
+                      }`}>{review.name}</h4>
+                      {review.role && (
+                        <p className={`text-sm ${
+                          isDark ? 'text-gray-400' : 'text-gray-600'
+                        }`}>{review.role}</p>
+                      )}
+                      {review.company && (
+                        <p className={`text-sm ${
+                          isDark ? 'text-gray-400' : 'text-gray-600'
+                        }`}>{review.company}</p>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Rating */}
+                  <div className="flex items-center gap-1 mb-3">
+                    {[...Array(5)].map((_, i) => (
+                      <Star
+                        key={i}
+                        className={`w-4 h-4 ${
+                          i < review.rating
+                            ? 'fill-yellow-400 text-yellow-400'
+                            : isDark ? 'text-gray-600' : 'text-gray-300'
+                        }`}
+                      />
+                    ))}
+                  </div>
+
+                  {/* Featured Badge */}
+                  {review.featured && (
+                    <div className={`inline-block px-3 py-1 rounded-full text-xs font-medium ${
+                      isDark ? 'bg-yellow-500/20 text-yellow-400' : 'bg-yellow-100 text-yellow-700'
+                    }`}>
+                      Featured
+                    </div>
+                  )}
                 </div>
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
+        )}
 
         {/* Call to Action */}
         <div className="text-center mt-12 animate-on-scroll">
