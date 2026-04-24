@@ -60,10 +60,12 @@ app.use('/api/upload', uploadRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
-  res.status(200).json({ 
+  const dbStatus = mongoose.connection.readyState === 1 ? 'connected' : 'disconnected';
+  res.status(dbStatus === 'connected' ? 200 : 503).json({ 
     message: 'Portfolio Contact API is running successfully!',
     timestamp: new Date().toISOString(),
-    status: 'healthy'
+    status: dbStatus === 'connected' ? 'healthy' : 'unhealthy',
+    database: dbStatus
   });
 });
 
