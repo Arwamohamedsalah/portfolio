@@ -10,11 +10,8 @@ const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://arwamohamedsalah05
 
 async function seedData() {
   try {
-    await mongoose.connect(MONGODB_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
-    console.log('✅ Connected to MongoDB');
+    // Assume connection is already open
+    console.log('✅ Seeding data...');
 
     // Seed About Section
     const existingAbout = await About.findOne();
@@ -183,12 +180,11 @@ I'm a proud graduate of the Information Technology Institute (ITI) from the Fron
     }
 
     console.log('\n✅ All data seeded successfully!');
-    process.exit(0);
+    // Do not close connection here
   } catch (error) {
     console.error('❌ Error seeding data:', error);
-    process.exit(1);
   }
 }
 
-seedData();
+module.exports = seedData;
 

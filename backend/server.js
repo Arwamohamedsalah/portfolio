@@ -8,6 +8,7 @@ const authRoutes = require('./routes/auth');
 const projectRoutes = require('./routes/projects');
 const sectionRoutes = require('./routes/sections');
 const uploadRoutes = require('./routes/upload');
+const seedData = require('./seed-data');
 const path = require('path');
 // const emailService = require('./services/emailService'); // Temporarily disabled due to module conflict
 
@@ -38,8 +39,12 @@ mongoose.connect(MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
-.then(() => {
+.then(async () => {
   console.log('Connected to MongoDB successfully!');
+  // Seed data if in development or if needed
+  if (process.env.NODE_ENV !== 'production') {
+    await seedData();
+  }
 })
 .catch((error) => {
   console.error('MongoDB connection error:', error);
