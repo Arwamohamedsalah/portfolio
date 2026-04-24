@@ -10,12 +10,12 @@ const Header = () => {
   const { isDark } = useTheme();
 
   const navItems = [
-    { name: 'Home', href: '#home' },
-    { name: 'About', href: '#about' },
-    { name: 'Education', href: '#education' },
-    { name: 'Projects', href: '#projects' },
-    { name: 'Reviews', href: '#reviews' },
-    { name: 'Contact', href: '#contact' }
+    { name: 'Home', id: 'home' },
+    { name: 'About', id: 'about' },
+    { name: 'Education', id: 'education' },
+    { name: 'Projects', id: 'projects' },
+    { name: 'Reviews', id: 'reviews' },
+    { name: 'Contact', id: 'contact' }
   ];
 
   useEffect(() => {
@@ -23,7 +23,7 @@ const Header = () => {
       setIsScrolled(window.scrollY > 50);
       
       // Update active section based on scroll position
-      const sections = navItems.map(item => item.href.substring(1));
+      const sections = navItems.map(item => item.id);
       const currentSection = sections.find(section => {
         const element = document.getElementById(section);
         if (element) {
@@ -42,8 +42,8 @@ const Header = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const scrollToSection = (href: string) => {
-    const element = document.getElementById(href.substring(1));
+  const scrollToSection = (id: string) => {
+    const element = document.getElementById(id);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
@@ -81,9 +81,9 @@ const Header = () => {
             {navItems.map((item) => (
               <button
                 key={item.name}
-                onClick={() => scrollToSection(item.href)}
+                onClick={() => scrollToSection(item.id)}
                 className={`relative px-4 py-2 text-sm font-medium transition-all duration-300 hover:scale-105 ${
-                  activeSection === item.href.substring(1) 
+                  activeSection === item.id 
                     ? isDark 
                       ? 'text-blue-400' 
                       : 'text-indigo-600'
@@ -93,7 +93,7 @@ const Header = () => {
                 }`}
               >
                 {item.name}
-                {activeSection === item.href.substring(1) && (
+                {activeSection === item.id && (
                   <span className={`absolute bottom-0 left-0 w-full h-0.5 transform origin-left transition-transform duration-300 ${
                     isDark 
                       ? 'bg-gradient-to-r from-blue-400 to-purple-400'
@@ -157,9 +157,9 @@ const Header = () => {
             {navItems.map((item) => (
               <button
                 key={item.name}
-                onClick={() => scrollToSection(item.href)}
+                onClick={() => scrollToSection(item.id)}
                 className={`block w-full text-left px-4 py-3 text-sm font-medium transition-all duration-300 rounded-lg ${
-                  activeSection === item.href.substring(1) 
+                  activeSection === item.id 
                     ? isDark 
                       ? 'text-blue-400 bg-blue-500/10' 
                       : 'text-indigo-600 bg-indigo-100/50'
