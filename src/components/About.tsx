@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Code, Heart, Coffee, MapPin, Calendar, Rocket, Linkedin, Github, Briefcase, Users } from 'lucide-react';
+import { Code, Heart, Coffee, MapPin, Calendar, Rocket, Linkedin, Github, Briefcase, Users, ExternalLink } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 import api from '../services/api';
 
@@ -105,7 +105,7 @@ const About = () => {
                 <div className={`relative backdrop-blur-sm rounded-lg overflow-hidden border ${
                   isDark 
                     ? 'bg-slate-800/50 border-slate-700/50'
-                    : 'bg-white/70 border-gray-200/50'
+                    : 'bg-white/90 border-gray-200/70'
                 }`}>
                   <img
                     src={about.image}
@@ -127,7 +127,7 @@ const About = () => {
                     className={`relative group rounded-lg overflow-hidden border transition-all duration-300 hover:scale-105 ${
                       isDark 
                         ? 'bg-slate-800/50 border-slate-700/50'
-                        : 'bg-white/70 border-gray-200/50'
+                        : 'bg-white/90 border-gray-200/70'
                     }`}
                   >
                     <img
@@ -169,13 +169,13 @@ const About = () => {
               ) : (
                 <>
                   <p className={`text-lg leading-relaxed ${
-                    isDark ? 'text-gray-300' : 'text-gray-700'
+                    isDark ? 'text-gray-300' : 'text-gray-800'
                   }`}>
                     A passionate fullstack developer exploring the infinite possibilities of web and mobile technologies. 
                     I create digital experiences that are not only functional but also beautiful and user-friendly.
                   </p>
                   <p className={`leading-relaxed ${
-                    isDark ? 'text-gray-300' : 'text-gray-600'
+                    isDark ? 'text-gray-300' : 'text-gray-700'
                   }`}>
                     My journey in the coding universe started with HTML and CSS, and has evolved to include 
                     cutting-edge frameworks like React, Next.js, and React Native. I'm constantly learning 
@@ -202,10 +202,10 @@ const About = () => {
               <div className={`flex items-center gap-3 p-4 backdrop-blur-sm rounded-lg border transition-all duration-300 hover:shadow-lg ${
                 isDark 
                   ? 'bg-slate-800/30 border-slate-700/50 hover:border-purple-400/50 hover:shadow-purple-500/10'
-                  : 'bg-white/60 border-gray-200/50 hover:border-purple-400/50 hover:shadow-purple-500/10'
+                  : 'bg-white/90 border-gray-200/70 hover:border-purple-400/50 hover:shadow-purple-500/10'
               }`}>
                 <Calendar className="w-5 h-5 text-purple-400" />
-                <span className={isDark ? 'text-gray-300' : 'text-gray-700'}>
+                <span className={isDark ? 'text-gray-300' : 'text-gray-800'}>
                   {about?.personalInfo?.availability || 'Available for work'}
                 </span>
               </div>
@@ -217,11 +217,11 @@ const About = () => {
                   className={`flex items-center gap-3 p-4 backdrop-blur-sm rounded-lg border transition-all duration-300 hover:shadow-lg transform hover:scale-105 ${
                     isDark 
                       ? 'bg-slate-800/30 border-slate-700/50 hover:border-gray-400/50 hover:shadow-gray-500/10'
-                      : 'bg-white/60 border-gray-200/50 hover:border-gray-400/50 hover:shadow-gray-500/10'
+                  : 'bg-white/90 border-gray-200/70 hover:border-indigo-400/50 hover:shadow-indigo-500/10'
                   }`}
                 >
                   <Github className="w-5 h-5 text-gray-500" />
-                  <span className={isDark ? 'text-gray-300' : 'text-gray-700'}>View GitHub</span>
+                  <span className={isDark ? 'text-gray-300' : 'text-gray-800'}>View GitHub</span>
                 </a>
               )}
               {about?.personalInfo?.linkedin && (
@@ -232,11 +232,11 @@ const About = () => {
                   className={`flex items-center gap-3 p-4 backdrop-blur-sm rounded-lg border transition-all duration-300 hover:shadow-lg transform hover:scale-105 ${
                     isDark 
                       ? 'bg-slate-800/30 border-slate-700/50 hover:border-blue-400/50 hover:shadow-blue-500/10'
-                      : 'bg-white/60 border-gray-200/50 hover:border-blue-400/50 hover:shadow-blue-500/10'
+                      : 'bg-white/90 border-gray-200/70 hover:border-blue-400/50 hover:shadow-blue-500/10'
                   }`}
                 >
                   <Linkedin className="w-5 h-5 text-blue-500" />
-                  <span className={isDark ? 'text-gray-300' : 'text-gray-700'}>Connect on LinkedIn</span>
+                  <span className={isDark ? 'text-gray-300' : 'text-gray-800'}>Connect on LinkedIn</span>
                 </a>
               )}
               {about?.personalInfo?.khamsat && (
@@ -247,11 +247,11 @@ const About = () => {
                   className={`flex items-center gap-3 p-4 backdrop-blur-sm rounded-lg border transition-all duration-300 hover:shadow-lg transform hover:scale-105 ${
                     isDark 
                       ? 'bg-slate-800/30 border-slate-700/50 hover:border-orange-400/50 hover:shadow-orange-500/10'
-                      : 'bg-white/60 border-gray-200/50 hover:border-orange-400/50 hover:shadow-orange-500/10'
+                      : 'bg-white/90 border-gray-200/70 hover:border-orange-400/50 hover:shadow-orange-500/10'
                   }`}
                 >
                   <Briefcase className="w-5 h-5 text-orange-500" />
-                  <span className={isDark ? 'text-gray-300' : 'text-gray-700'}>Khamsat (خمسات)</span>
+                  <span className={isDark ? 'text-gray-300' : 'text-gray-800'}>Khamsat (خمسات)</span>
                 </a>
               )}
               {about?.personalInfo?.mostaql && (
@@ -262,13 +262,26 @@ const About = () => {
                   className={`flex items-center gap-3 p-4 backdrop-blur-sm rounded-lg border transition-all duration-300 hover:shadow-lg transform hover:scale-105 ${
                     isDark 
                       ? 'bg-slate-800/30 border-slate-700/50 hover:border-teal-400/50 hover:shadow-teal-500/10'
-                      : 'bg-white/60 border-gray-200/50 hover:border-teal-400/50 hover:shadow-teal-500/10'
+                  : 'bg-white/90 border-gray-200/70 hover:border-teal-400/50 hover:shadow-teal-500/10'
                   }`}
                 >
                   <Users className="w-5 h-5 text-teal-500" />
-                  <span className={isDark ? 'text-gray-300' : 'text-gray-700'}>Mostaql (مستقل)</span>
+                  <span className={isDark ? 'text-gray-300' : 'text-gray-800'}>Mostaql (مستقل)</span>
                 </a>
               )}
+              <a 
+                href="https://www.upwork.com/freelancers/~01c54a24ae01f8eb7e?mp_source=share"
+                target="_blank" 
+                rel="noopener noreferrer"
+                className={`flex items-center gap-3 p-4 backdrop-blur-sm rounded-lg border transition-all duration-300 hover:shadow-lg transform hover:scale-105 ${
+                  isDark 
+                    ? 'bg-slate-800/30 border-slate-700/50 hover:border-emerald-400/50 hover:shadow-emerald-500/10'
+                    : 'bg-white/90 border-gray-200/70 hover:border-emerald-400/50 hover:shadow-emerald-500/10'
+                }`}
+              >
+                <ExternalLink className="w-5 h-5 text-emerald-500" />
+                <span className={isDark ? 'text-gray-300' : 'text-gray-800'}>Upwork Profile</span>
+              </a>
             </div>
           </div>
         </div>
@@ -284,7 +297,7 @@ const About = () => {
                   className={`text-center p-6 backdrop-blur-sm rounded-lg border transition-all duration-300 transform hover:scale-105 hover:shadow-xl group ${
                     isDark 
                       ? 'bg-slate-800/20 border-slate-700/50 hover:border-blue-400/50 hover:shadow-blue-500/10'
-                      : 'bg-white/60 border-gray-200/50 hover:border-indigo-400/50 hover:shadow-indigo-500/10'
+                      : 'bg-white/90 border-gray-200/70 hover:border-indigo-400/50 hover:shadow-indigo-500/10'
                   }`}
                 >
                   <Icon className={`w-8 h-8 mx-auto mb-3 group-hover:animate-bounce ${
@@ -298,7 +311,7 @@ const About = () => {
                     {stat.number}
                   </div>
                   <div className={`text-sm ${
-                    isDark ? 'text-gray-400' : 'text-gray-600'
+                    isDark ? 'text-gray-400' : 'text-gray-700'
                   }`}>{stat.label}</div>
                 </div>
               );
