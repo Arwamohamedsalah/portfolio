@@ -18,14 +18,16 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 9999;
 const ALLOWED_ORIGINS = process.env.CORS_ORIGIN
-  ? process.env.CORS_ORIGIN.split(',').map((origin) => origin.trim())
+  ? process.env.CORS_ORIGIN.split(',').map((origin) => origin.trim()).filter(Boolean)
   : ['http://localhost:5173', 'http://localhost:5174', 'http://localhost:3000'];
+
+console.log('CORS allowed origins:', ALLOWED_ORIGINS);
 
 // Middleware
 app.use(cors({
   origin: function (origin, callback) {
     if (!origin) return callback(null, true);
-    if (ALLOWED_ORIGINS.includes(origin)) return callback(null, true);
+    if (ALLOWED_ORIGINS.includes('*') || ALLOWED_ORIGINS.includes(origin)) return callback(null, true);
     return callback(new Error(`CORS policy: origin ${origin} not allowed`));
   },
   credentials: true,
