@@ -242,7 +242,7 @@ const Education = () => {
   };
 
   return (
-    <section id="education" ref={sectionRef} className="py-20 px-6 relative overflow-hidden">
+    <section id="education" ref={sectionRef} className="py-16 md:py-20 px-4 md:px-6 relative overflow-hidden">
       {/* Background Elements */}
       <div className="absolute inset-0">
         {[...Array(20)].map((_, i) => (
@@ -278,19 +278,19 @@ const Education = () => {
             }`}>ITI Graduate</span>
           </div>
           
-          <h2 className={`text-4xl md:text-5xl font-bold mb-6 ${
+          <h2 className={`text-3xl md:text-4xl lg:text-5xl font-bold mb-4 md:mb-6 ${
             isDark 
               ? 'bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent'
               : 'bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent'
           }`}>
             Education & Training
           </h2>
-          <div className={`w-24 h-1 mx-auto rounded-full ${
+          <div className={`w-20 md:w-24 h-1 mx-auto rounded-full ${
             isDark 
               ? 'bg-gradient-to-r from-blue-400 to-purple-400'
               : 'bg-gradient-to-r from-indigo-500 to-purple-500'
           }`}></div>
-          <p className={`mt-6 text-lg max-w-3xl mx-auto ${
+          <p className={`mt-4 md:mt-6 text-base md:text-lg max-w-3xl mx-auto px-4 ${
             isDark ? 'text-gray-400' : 'text-gray-600'
           }`}>
             Proud graduate of the Information Technology Institute (ITI) with comprehensive training 

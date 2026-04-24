@@ -5,6 +5,7 @@ import Header from '../components/Header';
 import Hero from '../components/Hero';
 import About from '../components/About';
 import Education from '../components/Education';
+import UIUX from '../components/UIUX';
 import Projects from '../components/Projects';
 import Reviews from '../components/Reviews';
 import Contact from '../components/Contact';
@@ -134,6 +135,7 @@ const Portfolio = () => {
         <Hero />
         <About />
         <Education />
+        <UIUX />
         <Projects />
         <Reviews />
         <Contact />

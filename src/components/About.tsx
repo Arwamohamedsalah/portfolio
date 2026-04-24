@@ -54,7 +54,7 @@ const About = () => {
   ];
 
   return (
-    <section id="about" ref={sectionRef} className="py-20 px-6 relative overflow-hidden">
+    <section id="about" ref={sectionRef} className="py-16 md:py-20 px-4 md:px-6 relative overflow-hidden">
       {/* Space Background Elements */}
       <div className="absolute inset-0">
         {[...Array(30)].map((_, i) => (
@@ -76,15 +76,15 @@ const About = () => {
       </div>
 
       <div className="container mx-auto max-w-6xl relative z-10">
-        <div className="text-center mb-16 animate-on-scroll">
-          <h2 className={`text-4xl md:text-5xl font-bold mb-6 ${
+        <div className="text-center mb-12 md:mb-16 animate-on-scroll">
+          <h2 className={`text-3xl md:text-4xl lg:text-5xl font-bold mb-4 md:mb-6 ${
             isDark 
               ? 'bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent'
               : 'bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent'
           }`}>
             About Me
           </h2>
-          <div className={`w-24 h-1 mx-auto rounded-full ${
+          <div className={`w-20 md:w-24 h-1 mx-auto rounded-full ${
             isDark 
               ? 'bg-gradient-to-r from-blue-400 to-purple-400'
               : 'bg-gradient-to-r from-indigo-500 to-purple-500'
