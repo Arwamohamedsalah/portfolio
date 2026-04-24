@@ -55,7 +55,7 @@ const Login = () => {
           <p className={`text-sm ${
             isDark ? 'text-gray-400' : 'text-gray-600'
           }`}>
-            Sign in to access the dashboard
+            Sign in to access the dashboard. This page is only available via the direct /login link.
           </p>
         </div>
 
@@ -93,7 +93,7 @@ const Login = () => {
                 } focus:outline-none focus:ring-2 focus:ring-opacity-50 ${
                   isDark ? 'focus:ring-blue-500' : 'focus:ring-indigo-500'
                 }`}
-                placeholder="admin@example.com"
+                placeholder="arwamohamedsalah05@gmail.com"
               />
             </div>
           </div>
