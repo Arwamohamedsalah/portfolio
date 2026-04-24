@@ -41,10 +41,8 @@ mongoose.connect(MONGODB_URI, {
 })
 .then(async () => {
   console.log('Connected to MongoDB successfully!');
-  // Seed data if in development or if needed
-  if (process.env.NODE_ENV !== 'production') {
-    await seedData();
-  }
+  // Seed data if not already seeded
+  await seedData();
 })
 .catch((error) => {
   console.error('MongoDB connection error:', error);
