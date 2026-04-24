@@ -105,6 +105,48 @@ const Education = () => {
         { name: 'Modern JavaScript (ES6+)', category: 'Programming' },
         { name: 'Database Fundamentals', category: 'Database' }
       ]
+    },
+    {
+      title: 'UI/UX Design Track',
+      duration: '4 Months Scholarship',
+      period: 'Design Track',
+      description: 'Comprehensive training in user interface and user experience design principles, tools, and methodologies for creating intuitive and engaging digital experiences.',
+      skills: [
+        { name: 'Design Thinking', category: 'Design' },
+        { name: 'User Research & Analysis', category: 'Design' },
+        { name: 'User Personas & Journey Mapping', category: 'Design' },
+        { name: 'Information Architecture', category: 'Design' },
+        { name: 'Wireframing & Prototyping', category: 'Design' },
+        { name: 'Visual Design Principles', category: 'Design' },
+        { name: 'Color Theory & Psychology', category: 'Design' },
+        { name: 'Typography & Hierarchy', category: 'Design' },
+        { name: 'Layout & Composition', category: 'Design' },
+        { name: 'UI/UX Design Fundamentals', category: 'Design' },
+        { name: 'Interaction Design', category: 'Design' },
+        { name: 'Usability Testing & Evaluation', category: 'Design' },
+        { name: 'Design Systems & Components', category: 'Design' },
+        { name: 'Accessibility & Inclusive Design', category: 'Design' },
+        { name: 'Mobile UI/UX Design', category: 'Design' },
+        { name: 'Web UI/UX Design', category: 'Design' },
+        { name: 'Figma', category: 'Tools' },
+        { name: 'Adobe XD', category: 'Tools' },
+        { name: 'Sketch', category: 'Tools' },
+        { name: 'InVision', category: 'Tools' },
+        { name: 'Principle', category: 'Tools' },
+        { name: 'Framer', category: 'Tools' },
+        { name: 'User Testing Tools', category: 'Tools' },
+        { name: 'Design Collaboration', category: 'Tools' },
+        { name: 'Responsive Design', category: 'Design' },
+        { name: 'Micro-interactions', category: 'Design' },
+        { name: 'Animation in UI', category: 'Design' },
+        { name: 'Design Psychology', category: 'Design' },
+        { name: 'A/B Testing Concepts', category: 'Design' },
+        { name: 'Analytics & Metrics', category: 'Design' },
+        { name: 'Portfolio Development', category: 'Design' },
+        { name: 'Client Presentation Skills', category: 'Design' },
+        { name: 'Design Ethics', category: 'Design' },
+        { name: 'Emerging Technologies in UX', category: 'Design' }
+      ]
     }
   ];
 
