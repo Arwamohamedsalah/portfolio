@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, Linkedin, Github, Briefcase, Users } from 'lucide-react';
+import { Menu, X, Linkedin, Github, Briefcase, Users, ExternalLink } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 import ThemeToggle from './ThemeToggle';
 
@@ -128,6 +128,19 @@ const Header = () => {
             >
               <Linkedin className="w-5 h-5" />
             </a>
+            <a
+              href="https://www.upwork.com/freelancers/~01c54a24ae01f8eb7e?mp_source=share"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`p-2 rounded-lg transition-all duration-300 transform hover:scale-110 ${
+                isDark 
+                  ? 'text-gray-400 hover:text-green-400 hover:bg-slate-800/50' 
+                  : 'text-gray-600 hover:text-green-600 hover:bg-green-50'
+              }`}
+              aria-label="Upwork Profile"
+            >
+              <ExternalLink className="w-5 h-5" />
+            </a>
             <ThemeToggle />
           </div>
 
@@ -225,6 +238,19 @@ const Header = () => {
                 aria-label="Mostaql Profile"
               >
                 <Users className="w-5 h-5" />
+              </a>
+              <a
+                href="https://www.upwork.com/freelancers/~01c54a24ae01f8eb7e?mp_source=share"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`p-2 rounded-lg transition-all duration-300 transform hover:scale-110 ${
+                  isDark 
+                    ? 'text-gray-400 hover:text-green-400 hover:bg-slate-700/50'
+                    : 'text-gray-600 hover:text-green-600 hover:bg-green-50'
+                }`}
+                aria-label="Upwork Profile"
+              >
+                <ExternalLink className="w-5 h-5" />
               </a>
             </div>
           </div>
