@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Mail, MapPin, Send, Github, Linkedin, Mail as MailIcon, Briefcase, Users, CheckCircle, AlertCircle } from 'lucide-react';
+import { Mail, MapPin, Send, Github, Linkedin, Mail as MailIcon, Briefcase, Users, ExternalLink, CheckCircle, AlertCircle } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 import { API_BASE_URL } from '../services/api';
 
@@ -120,7 +120,8 @@ const Contact = () => {
     { icon: Linkedin, href: 'https://www.linkedin.com/in/arwamsalah/', label: 'LinkedIn', color: 'blue' },
     { icon: MailIcon, href: 'mailto:arwamohamedsalah05@gmail.com', label: 'Email', color: 'red' },
     { icon: Briefcase, href: 'https://khamsat.com/user/arwa_mohamedsalah', label: 'Khamsat (خمسات)', color: 'orange' },
-    { icon: Users, href: 'https://mostaql.com/u/ArwaMsalah', label: 'Mostaql (مستقل)', color: 'teal' }
+    { icon: Users, href: 'https://mostaql.com/u/ArwaMsalah', label: 'Mostaql (مستقل)', color: 'teal' },
+    { icon: ExternalLink, href: 'https://www.upwork.com/freelancers/~01c54a24ae01f8eb7e?mp_source=share', label: 'Upwork', color: 'green' }
   ];
 
   return (
@@ -229,6 +230,8 @@ const Contact = () => {
                           ? 'hover:bg-orange-500/20'
                           : social.color === 'teal'
                           ? 'hover:bg-teal-500/20'
+                          : social.color === 'green'
+                          ? 'hover:bg-green-500/20'
                           : 'hover:bg-gray-500/20'
                       }`}
                       aria-label={social.label}
