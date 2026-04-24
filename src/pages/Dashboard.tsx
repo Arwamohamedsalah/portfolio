@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
-import api from '../services/api';
+import api, { API_BASE_URL } from '../services/api';
 import {
   LogOut, Plus, Edit, Trash2, Save, X, FolderKanban, User, GraduationCap,
   MessageSquare, Eye, Globe, Smartphone, Menu, X as XIcon, Star
@@ -166,7 +166,8 @@ const Dashboard = () => {
         const formData = new FormData();
         formData.append('image', selectedProjectImage);
         const uploadResponse = await api.post('/upload/image', formData);
-        imageUrl = `http://localhost:9999${uploadResponse.data.data.url}`;
+        const baseUrl = API_BASE_URL.replace(/\/api$/, '');
+        imageUrl = `${baseUrl}${uploadResponse.data.data.url}`;
         setUploadingProjectImage(false);
       }
 
@@ -248,7 +249,8 @@ const Dashboard = () => {
       const uploadResponse = await api.post('/upload/image', formData);
 
       // Get the uploaded image URL
-      const imageUrl = `http://localhost:9999${uploadResponse.data.data.url}`;
+      const baseUrl = API_BASE_URL.replace(/\/api$/, '');
+      const imageUrl = `${baseUrl}${uploadResponse.data.data.url}`;
 
       // Add image to about section
       await api.post('/sections/about/images', {
@@ -1368,7 +1370,7 @@ const Dashboard = () => {
                         )}
                       </div>
                       <a
-                        href={`http://localhost:9999${resume.url}`}
+                        href={`${API_BASE_URL.replace(/\/api$/, '')}${resume.url}`}
                         download
                         className={`px-4 py-2 rounded-lg flex items-center gap-2 transition-all ${
                           isDark ? 'bg-blue-600 hover:bg-blue-700 text-white' : 'bg-indigo-600 hover:bg-indigo-700 text-white'

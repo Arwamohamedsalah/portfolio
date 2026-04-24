@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Mail, MapPin, Send, Github, Linkedin, Mail as MailIcon, Briefcase, Users, CheckCircle, AlertCircle } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
+import { API_BASE_URL } from '../services/api';
 
 const Contact = () => {
   const sectionRef = useRef<HTMLElement>(null);
@@ -51,7 +52,8 @@ const Contact = () => {
     setSubmitStatus({ type: null, message: '' });
     
     try {
-      const response = await fetch('http://localhost:9999/api/contact', {
+      const backendBase = API_BASE_URL.replace(/\/api$/, '');
+      const response = await fetch(`${backendBase}/api/contact`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

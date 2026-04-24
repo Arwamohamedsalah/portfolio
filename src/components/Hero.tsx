@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { ChevronDown, Download, Github, Linkedin, Mail } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 import arwaPic from '../arwapic.jpeg';
-import api from '../services/api';
+import api, { API_BASE_URL } from '../services/api';
 
 const Hero = () => {
   const [displayText, setDisplayText] = useState('');
@@ -20,7 +20,8 @@ const Hero = () => {
     try {
       const response = await api.get('/upload/resume');
       if (response.data.success) {
-        setResumeUrl(`http://localhost:9999${response.data.data.url}`);
+        const baseUrl = API_BASE_URL.replace(/\/api$/, '');
+        setResumeUrl(`${baseUrl}${response.data.data.url}`);
       }
     } catch (error) {
       // Resume not found, that's okay

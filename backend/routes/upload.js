@@ -193,8 +193,9 @@ router.get('/resume', (req, res) => {
         }
       });
     } else {
-      res.status(404).json({
+      res.json({
         success: false,
+        data: null,
         message: 'No resume found'
       });
     }
