@@ -3,13 +3,14 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const fs = require('fs');
+const path = require('path');
 const contactRoutes = require('./routes/contact');
 const authRoutes = require('./routes/auth');
 const projectRoutes = require('./routes/projects');
 const sectionRoutes = require('./routes/sections');
 const uploadRoutes = require('./routes/upload');
 const seedData = require('./seed-data');
-const path = require('path');
+const User = require('./models/User');
 // const emailService = require('./services/emailService'); // Temporarily disabled due to module conflict
 
 // Load environment variables
@@ -17,6 +18,8 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 9999;
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'arwamohamedsalah05@gmail.com';
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'Arwa2030';
 const ALLOWED_ORIGINS = process.env.CORS_ORIGIN
   ? process.env.CORS_ORIGIN.split(',').map((origin) => origin.trim()).filter(Boolean)
   : ['http://localhost:5173', 'http://localhost:5174', 'http://localhost:3000'];
@@ -45,6 +48,8 @@ mongoose.connect(MONGODB_URI, {
   console.log('Connected to MongoDB successfully!');
   // Seed data if not already seeded
   await seedData();
+  // Ensure admin user exists with the configured credentials
+  await ensureAdminUser();
 })
 .catch((error) => {
   console.error('MongoDB connection error:', error);
@@ -82,6 +87,42 @@ if (fs.existsSync(clientBuildPath)) {
     }
     res.sendFile(path.join(clientBuildPath, 'index.html'));
   });
+}
+
+async function ensureAdminUser() {
+  try {
+    const admin = await User.findOne({ role: 'admin' }).select('+password');
+
+    if (admin) {
+      const needsUpdate = admin.email !== ADMIN_EMAIL || !(await admin.comparePassword(ADMIN_PASSWORD));
+      if (needsUpdate) {
+        admin.email = ADMIN_EMAIL;
+        admin.password = ADMIN_PASSWORD;
+        admin.username = 'admin';
+        await admin.save();
+        console.log('✅ Admin user updated to configured credentials.');
+        console.log(`Email: ${ADMIN_EMAIL}`);
+        console.log(`Password: ${ADMIN_PASSWORD}`);
+      } else {
+        console.log('✅ Admin user already exists with correct credentials.');
+      }
+      return;
+    }
+
+    const newAdmin = new User({
+      username: 'admin',
+      email: ADMIN_EMAIL,
+      password: ADMIN_PASSWORD,
+      role: 'admin'
+    });
+
+    await newAdmin.save();
+    console.log('✅ Admin user created with configured credentials.');
+    console.log(`Email: ${ADMIN_EMAIL}`);
+    console.log(`Password: ${ADMIN_PASSWORD}`);
+  } catch (error) {
+    console.error('❌ Failed to ensure admin user exists:', error);
+  }
 }
 
 // Error handling middleware
