@@ -45,7 +45,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       localStorage.setItem('token', tokenData);
       localStorage.setItem('user', JSON.stringify(userData));
     } catch (error: any) {
-      throw new Error(error.response?.data?.message || 'Login failed');
+      const message =
+        error.response?.data?.message ||
+        (error.response?.status === 404
+          ? 'Backend login endpoint not found. The backend service may be down or misconfigured.'
+          : error.message || 'Login failed');
+      throw new Error(message);
     }
   };
 
